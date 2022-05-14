@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
+import { toast } from 'react-toastify';
 
 const BookingModal = ({ treatment, date, setTreatment }) => {
     const [user, loading, error] = useAuthState(auth);
@@ -10,8 +11,36 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
     const handleBooking = e => {
         e.preventDefault();
         const slot = e.target.slot.value;
-        console.log(slot, _id, name);
-        setTreatment(null); // eta deyar karon hocche amramodal e submit e click korle jaate modal ta auto close hoye jaay. karon ager page e modal open hobar condition deya hoisilo jodi treatment thake taholei modal open hobe
+        const formattedDate = format(date, "PP");
+        const booking = {
+            treatmentId: _id,
+            treatment: name,
+            date: formattedDate,
+            slot,
+            patient: user.email,
+            patientName: user.displayName,
+            phone: e.target.phone.value
+        };
+
+
+        fetch('http://localhost:5000/booking', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(booking)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if (data.success) {
+                    toast.success(`Appointment is set, ${formattedDate} at ${slot}`)
+                } else {
+                    toast.warning(`Appointment is already set, ${formattedDate} at ${slot}`)
+                }
+                setTreatment(null); // eta deyar karon hocche amramodal e submit e click korle jaate modal ta auto close hoye jaay. karon ager page e modal open hobar condition deya hoisilo jodi treatment thake taholei modal open hobe
+            })
+
     }
     return (
         <div>
