@@ -4,7 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { toast } from 'react-toastify';
 
-const BookingModal = ({ treatment, date, setTreatment }) => {
+const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
     const [user, loading, error] = useAuthState(auth);
     // console.log(user)
     const { _id, name, slots } = treatment;
@@ -38,6 +38,7 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
                 } else {
                     toast.warning(`Appointment is already set, ${formattedDate} at ${slot}`)
                 }
+                refetch();
                 setTreatment(null); // eta deyar karon hocche amramodal e submit e click korle jaate modal ta auto close hoye jaay. karon ager page e modal open hobar condition deya hoisilo jodi treatment thake taholei modal open hobe
             })
 
