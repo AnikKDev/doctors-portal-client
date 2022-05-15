@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSignInWithGoogle, useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
+import useToken from '../../Hooks/useToken';
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../loading';
@@ -19,13 +20,15 @@ const SignUp = () => {
     const [updateProfile, updating, updateErroerror] = useUpdateProfile(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
 
+    const [token] = useToken(user || gUser);
+
     const navigate = useNavigate();
+
     const onSubmit = async data => {
         console.log(data);
         await createUserWithEmailAndPassword(data.email, data.password);
         await updateProfile({ displayName: data.name });
-        console.log('update done');
-        navigate('/appointment');
+        // console.log('update done');
 
     };
     if (error || gError || updateErroerror) {
@@ -34,8 +37,8 @@ const SignUp = () => {
     if (loading || gLoading || updating) {
         return <Loading></Loading>
     };
-    if (user || gUser) {
-        console.log(gUser || user)
+    if (token) {
+        navigate('/appointment')
     };
     return (
         <div className="h-screen items-center justify-center flex">
@@ -101,7 +104,7 @@ const SignUp = () => {
                                         message: 'Must be six characters or longer'
                                     }
                                 })}
-                                type="passwod"
+                                type="password"
                                 placeholder="password..."
                                 className="input input-bordered w-full max-w-xs" />
                             <label className="label">
