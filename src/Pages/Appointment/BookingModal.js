@@ -23,7 +23,7 @@ const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
         };
 
 
-        fetch('http://localhost:5000/booking', {
+        fetch('https://fathomless-fortress-56517.herokuapp.com/booking', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
