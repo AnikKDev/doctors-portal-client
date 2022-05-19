@@ -90,7 +90,7 @@ const Login = () => {
                                         message: 'Must be six characters or longer'
                                     }
                                 })}
-                                type="passwod"
+                                type="password"
                                 placeholder="password..."
                                 className="input input-bordered w-full max-w-xs" />
                             <label className="label">
